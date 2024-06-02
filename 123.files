@@ -1,0 +1,13 @@
+dir.cpp
+dir.h
+main.cpp
+normalmess.cpp
+normalmess.h
+serialunion.cpp
+serialunion.h
+widgetsendcommon.cpp
+widgetsendcommon.h
+widgetsettings.cpp
+widgetsettings.h
+widgettextdisplay.cpp
+widgettextdisplay.h
