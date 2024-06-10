@@ -15,10 +15,13 @@
 #include <QTimer>
 #include <QFileDialog>
 #include <QDir>
+#include <iostream>
 
 namespace Ui {
 class SerialUnion;
 }
+
+class WidgetSettings;
 
 class SerialUnion : public QMainWindow
 {
@@ -51,6 +54,8 @@ private slots:
     void slotRecNum(int nRecNum);
     void slotSendNum(int m_nBufferSize);
     void on_mbSaveRecData_triggered();
+    void slotHexDataprocess(QByteArray);
+
 //    void on_mbMoreSettings_triggered();
 };
 

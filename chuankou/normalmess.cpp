@@ -7,7 +7,7 @@ NormalMess::NormalMess(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(this,SIGNAL(signalGetMess(QString)),this,SLOT(slotGetMess(QString)));
+    connect(this,SIGNAL(signalGetMess(QString)),this,SLOT(slotGetMess(QString)));  //设置label的显示
 }
 
 NormalMess::~NormalMess()

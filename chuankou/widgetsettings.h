@@ -11,6 +11,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QDateTime>
+#include "mainwindow.h"
 
 namespace Ui {
 class WidgetSettings;
@@ -35,11 +36,14 @@ public:
     bool m_isHexRec;
     bool m_isDisTime;
     QString m_sOpenSerial;
+    QByteArray m_buffer;
+
 
 private:
     Ui::WidgetSettings *ui;
     QSerialPort Serial;
     int m_nBufferSize;
+
 
 private:
     bool openSerialPort(QSerialPort *serial, QString sPortName, int nBaudRate, int nStopBit, \
@@ -50,11 +54,14 @@ private slots:
     void slotSerialRead();
     void on_btnClearRec_clicked();
 
+
 signals:
     void signalRecData(QString sData);
     void signalSenParameter(QSerialPort *serial);
     void signalClearRec();
     void signalRecNum(int nRecNum);
+    void signalRecHexData(QByteArray HexData);   //有了十六进制数据信号
+    void toMain(QByteArray toMainHex);
 };
 
 #endif // WIDGETSETTINGS_H

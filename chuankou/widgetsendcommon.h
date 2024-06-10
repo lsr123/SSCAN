@@ -47,6 +47,8 @@ private slots:
     void on_btnSendFile_clicked();
     void on_btnClearSendFilePath_clicked();
 
+    void on_isHexSend_stateChanged(int arg1);
+
 private:
     Ui::WidgetSendCommon *ui;
     QSerialPort *serialSend;

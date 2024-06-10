@@ -9,7 +9,7 @@ WidgetSettings::WidgetSettings(QWidget *parent) :
 
     m_nBufferSize = 0;
 
-    connect(&Serial,&QSerialPort::readyRead,this,&WidgetSettings::slotSerialRead);
+    connect(&Serial,&QSerialPort::readyRead,this,&WidgetSettings::slotSerialRead);  //串口有新数据开始调用
 }
 
 WidgetSettings::~WidgetSettings()
@@ -39,19 +39,24 @@ void WidgetSettings::on_btnSearchPort_clicked()
 }
 
 //读取内容并将内容以信号的形式转发出去
-void WidgetSettings::slotSerialRead()
+void WidgetSettings::slotSerialRead()    //槽函数  串口有新数开始运行
 {
-    QByteArray buffer;
+    //qDebug("1");
+    //QByteArray buffer;
     Serial.waitForReadyRead(10);
-    buffer = Serial.readAll();
+    m_buffer = Serial.readAll();
 
-    m_nBufferSize += buffer.length();
+    m_nBufferSize += m_buffer.length();
 
     if(ui->isHexRec->isChecked() == true)
     {
-        buffer = buffer.toHex();
+        m_buffer = m_buffer.toHex();     //此处的buffer中存的是16进制的数
+        emit signalRecHexData(m_buffer);
     }
-    QString receive = QString::fromLocal8Bit(buffer);//转为字符串
+
+
+
+    QString receive = QString::fromLocal8Bit(m_buffer);//转为字符串
     if(ui->isDisTime->isChecked() == true)
     {
         QDateTime time = QDateTime::currentDateTime();
@@ -62,8 +67,13 @@ void WidgetSettings::slotSerialRead()
     {
         receive = receive;
     }
+
+
     emit signalRecNum(m_nBufferSize);
-    emit signalRecData(receive);
+    emit signalRecData(receive);    //串口的新数处理完毕后，发送收到数据信号，receive中是字符串，调用slotRecData
+    m_buffer = m_buffer.toHex();
+    emit toMain(m_buffer);
+    qDebug("1");
 }
 
 //打开串口
@@ -230,4 +240,7 @@ void WidgetSettings::on_btnClearRec_clicked()
     m_nBufferSize = 0;
     emit signalClearRec();
     emit signalRecNum(m_nBufferSize);
+
 }
+
+

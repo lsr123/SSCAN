@@ -18,6 +18,7 @@ SerialUnion::SerialUnion(QWidget *parent) :
     m_sendcommon = WidgetSendCommon::GetSendCommonIns();//添加发送界面
     ui->widgetSend->addWidget(m_sendcommon);
 
+
     //状态栏设计
     m_norMessSend = new NormalMess(this);
     ui->statusBar->addWidget(m_norMessSend);
@@ -41,7 +42,7 @@ SerialUnion::SerialUnion(QWidget *parent) :
             SIGNAL(signalSendNum(int)),\
             this,\
             SLOT(slotSendNum(int)));
-
+    connect(WidgetSettings::GetSettingIns(),SIGNAL(signalRecHexData(QByteArray)),this,SLOT(slotHexDataprocess(QByteArray)));
     //状态栏初始化
     Dir::GetDirIns()->loadParam();
     m_permanUrl->getMess("<a href=\"https://mp.weixin.qq.com/s/Feo3RDvt4Ozra9naJr1F0g\">欢迎关注公众号</a>");
@@ -67,9 +68,16 @@ SerialUnion *SerialUnion::GetUnion()
     return getunion;
 }
 
-void SerialUnion::slotRecData(QString sData)
+void SerialUnion::slotRecData(QString sData)   //该函数仅仅显示字符串
 {
+   // QString  str = "0x1B";
+    //int value = str.toInt(nullptr, 16);
+    //uint8_t tmp = static_cast<uint8_t>(str.toUInt(nullptr, 16));
+
+
     WidgetTextDisplay::GetTextDisplay()->getDisplayData(sData);
+
+   // qDebug(ar);
 }
 
 void SerialUnion::slotSenParameter(QSerialPort *serial)
@@ -130,3 +138,30 @@ bool SerialUnion::mbSaveFile(QString sFileName,QString sData)
 //{
 ////    MainSettings::GetMainSetIns()->show();
 //}
+
+void SerialUnion::slotHexDataprocess(QByteArray Hexbuffer)
+{
+    int a = Hexbuffer.size();
+    Hexbuffer = Hexbuffer;
+    std::cout<<"length = "<<a<<std::endl;
+    std::cout<<sizeof(int)<<std::endl;
+    std::cout<<sizeof(short)<<std::endl;
+
+    QByteArray ba;
+    ba.resize(6);
+    ba [0] = 0x3c;
+    ba [1] = 0xb8;
+    ba [2] = 0x64;
+    ba [3] = 0x18;
+    ba[4] = 0xca;
+    ba.data () [5] = 0x31;
+    qDebug()<<" []"<<ba[2]; //[] d
+    qDebug()<<"at ()"<<ba.at (2); //at() d
+    qDebug()<<"data () "<<ba.data () [2]; //data () d
+    qDebug()<<"constData ()"<<ba.constData () [2]; //constData () d
+    qDebug()<<"constData ()"<<ba.constData () [5]; //constData () 1
+    qDebug()<<"1 zijie"<<Hexbuffer[0];
+    qDebug()<<"2 zijie"<<Hexbuffer[1];
+    qDebug("OK");
+
+}
