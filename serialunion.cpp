@@ -28,6 +28,7 @@ SerialUnion::SerialUnion(QWidget *parent) :
     m_permanUrl = new NormalMess(this);
     ui->statusBar->addPermanentWidget(m_permanUrl);
 
+
     //连接信号与槽
     connect(WidgetSettings::GetSettingIns(),SIGNAL(signalRecData(QString)),this,SLOT(slotRecData(QString)));
     connect(WidgetSettings::GetSettingIns(),\

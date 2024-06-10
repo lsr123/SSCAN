@@ -336,3 +336,9 @@ void WidgetSendCommon::configData()
     }
 }
 
+
+void WidgetSendCommon::on_isHexSend_stateChanged(int arg1)
+{
+
+}
+
