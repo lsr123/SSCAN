@@ -7,6 +7,7 @@ SerialUnion::SerialUnion(QWidget *parent) :
     ui(new Ui::SerialUnion)
 {
     ui->setupUi(this);
+    this->setAttribute(Qt::WA_QuitOnClose,false);
 
     QTimer *refreashtime = new QTimer();
     refreashtime->start(1000);
@@ -134,34 +135,7 @@ bool SerialUnion::mbSaveFile(QString sFileName,QString sData)
     }
 }
 
-//void SerialUnion::on_mbMoreSettings_triggered()
-//{
-////    MainSettings::GetMainSetIns()->show();
-//}
-
 void SerialUnion::slotHexDataprocess(QByteArray Hexbuffer)
 {
-    int a = Hexbuffer.size();
-    Hexbuffer = Hexbuffer;
-    std::cout<<"length = "<<a<<std::endl;
-    std::cout<<sizeof(int)<<std::endl;
-    std::cout<<sizeof(short)<<std::endl;
-
-    QByteArray ba;
-    ba.resize(6);
-    ba [0] = 0x3c;
-    ba [1] = 0xb8;
-    ba [2] = 0x64;
-    ba [3] = 0x18;
-    ba[4] = 0xca;
-    ba.data () [5] = 0x31;
-    qDebug()<<" []"<<ba[2]; //[] d
-    qDebug()<<"at ()"<<ba.at (2); //at() d
-    qDebug()<<"data () "<<ba.data () [2]; //data () d
-    qDebug()<<"constData ()"<<ba.constData () [2]; //constData () d
-    qDebug()<<"constData ()"<<ba.constData () [5]; //constData () 1
-    qDebug()<<"1 zijie"<<Hexbuffer[0];
-    qDebug()<<"2 zijie"<<Hexbuffer[1];
-    qDebug("OK");
 
 }

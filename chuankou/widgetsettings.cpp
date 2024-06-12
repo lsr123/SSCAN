@@ -9,7 +9,14 @@ WidgetSettings::WidgetSettings(QWidget *parent) :
 
     m_nBufferSize = 0;
 
-    connect(&Serial,&QSerialPort::readyRead,this,&WidgetSettings::slotSerialRead);  //串口有新数据开始调用
+    connect(&Serial,&QSerialPort::readyRead,this,\
+            &WidgetSettings::slotSerialRead);  //串口有新数据开始调用
+
+    QWidget* hide[] = {ui->isHexRec,ui->cbxBaudRate,ui->cbxDataBit,ui->cbxParityBit,ui->cbxStopBit,ui->lblStopBit,ui->lblParityBit,\
+                        ui->lbllDataBit,ui->lblBaudRate,ui->isDisTime};
+    for(int i = 0; i < sizeof(hide)/sizeof(QWidget*); i++){
+        hide[i]->setVisible(false);
+        }
 }
 
 WidgetSettings::~WidgetSettings()
@@ -50,11 +57,11 @@ void WidgetSettings::slotSerialRead()    //槽函数  串口有新数开始运�
 
     if(ui->isHexRec->isChecked() == true)
     {
-        m_buffer = m_buffer.toHex();     //此处的buffer中存的是16进制的数
-        emit signalRecHexData(m_buffer);
+        //按钮已屏蔽，不执行
     }
 
 
+    m_buffer = m_buffer.toHex();   //收到的字符串转16进制
 
     QString receive = QString::fromLocal8Bit(m_buffer);//转为字符串
     if(ui->isDisTime->isChecked() == true)
@@ -71,7 +78,7 @@ void WidgetSettings::slotSerialRead()    //槽函数  串口有新数开始运�
 
     emit signalRecNum(m_nBufferSize);
     emit signalRecData(receive);    //串口的新数处理完毕后，发送收到数据信号，receive中是字符串，调用slotRecData
-    m_buffer = m_buffer.toHex();
+    emit signalRecHexData(m_buffer);
     emit toMain(m_buffer);
     qDebug("1");
 }
@@ -80,7 +87,8 @@ void WidgetSettings::slotSerialRead()    //槽函数  串口有新数开始运�
 void WidgetSettings::on_btnSerialPortOperation_clicked()
 {
     m_sPortName = ui->cbxPort->currentText();
-    m_nBaudRate = ui->cbxBaudRate->currentText().toInt();
+    m_nBaudRate = 115200;
+    //m_nBaudRate = ui->cbxBaudRate->currentText().toInt();
     m_nStopBit = ui->cbxStopBit->currentText().toInt();
     m_nDataBit = ui->cbxDataBit->currentText().toInt();
     m_sParity = ui->cbxParityBit->currentText();

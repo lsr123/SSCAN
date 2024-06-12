@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1056</width>
-    <height>604</height>
+    <width>371</width>
+    <height>514</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>SSCAN-V1.0</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="rec.qrc">
+   <iconset resource="../rc.qrc">
     <normaloff>:/imageFile/font.ico</normaloff>:/imageFile/font.ico</iconset>
   </property>
   <property name="iconSize">
@@ -48,7 +48,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1056</width>
+     <width>371</width>
      <height>25</height>
     </rect>
    </property>
@@ -74,7 +74,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="rec.qrc"/>
+  <include location="../rc.qrc"/>
  </resources>
  <connections/>
 </ui>

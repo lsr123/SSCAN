@@ -12,6 +12,11 @@ WidgetSendCommon::WidgetSendCommon(QWidget *parent) :
     timer = nullptr;
     serialSend = nullptr;
     ui->letSendFilePath->setEnabled(false);
+
+    QWidget* hide[] = {ui->btnClearSend,ui->btnClearSendFilePath,ui->letSendFilePath,ui->btnSelectSendFile,ui->lblCycle,ui->letCyCleTime,ui->lblMS,ui->btnSendFile,ui->isEnterSend,ui->isHexSend,ui->isTimingSend};
+    for(int i = 0; i < sizeof(hide)/sizeof(QWidget*); i++){
+        hide[i]->setVisible(false);
+    }
 }
 
 WidgetSendCommon::~WidgetSendCommon()
@@ -39,6 +44,9 @@ void WidgetSendCommon::getSerialParam(QSerialPort *serial)
 
 void WidgetSendCommon::on_btnSend_clicked()
 {
+    qDebug()<<strbuf;
+    qDebug("SUCCESS");
+
     if(serialSend == nullptr)
     {
         QMessageBox::critical(this,"Error","Please open the Serial",QMessageBox::Yes);
@@ -46,6 +54,7 @@ void WidgetSendCommon::on_btnSend_clicked()
     }
     else if(serialSend->isOpen() == true)
     {
+        QByteArray sendData;
         QString sSendBUffer = ui->textEdit->toPlainText();
         nSendLength += sSendBUffer.toLocal8Bit().length();
         m_isHexSend = ui->isHexSend->isChecked();
@@ -59,12 +68,17 @@ void WidgetSendCommon::on_btnSend_clicked()
         }
         if(ui->isHexSend->isChecked() == false)
         {
-            serialSend->write(sSendBUffer.toLocal8Bit());
+            // serialSend->write(sSendBUffer.toLocal8Bit());
+
+           // String2Hex(sSendBUffer,sendData);   //16进制发送
+            String2Hex(strbuf,sendData);   //可以实现主窗口的字符串发送，但是还要检查发送的类型，有错误20240612:1点17分
+            serialSend->write(sendData);
         }
         else
         {
-            serialSend->write(fronHexToDec(sSendBUffer.toLocal8Bit()).toLocal8Bit());
+           // serialSend->write(fronHexToDec(sSendBUffer.toLocal8Bit()).toLocal8Bit());
         }
+
 //        qDebug()<<nSendLength;
         emit signalSendNum(nSendLength);
     }
@@ -342,3 +356,58 @@ void WidgetSendCommon::on_isHexSend_stateChanged(int arg1)
 
 }
 
+
+
+//将一个字符串转换成字节数组
+void WidgetSendCommon::String2Hex(QString str, QByteArray &senddata)
+{
+    int hexdata,lowhexdata;
+    int hexdatalen = 0;
+    int len = str.length();    //字符串长度
+    senddata.resize(len/2);    //两个字符转成一个字节的16进制，所以先预定一个大小
+    char lstr,hstr;
+    for(int i=0; i<len; )
+    {
+        hstr=str[i].toLatin1(); //将每个字符都转成ASCII码
+        if(hstr == ' ')         //判断是否为空格
+        {
+            i++;
+            continue;
+        }
+        i++;
+        if(i >= len)
+            break;
+        lstr = str[i].toLatin1();
+        hexdata = ConvertHexChar(hstr);  //字符转换成16进制数
+        lowhexdata = ConvertHexChar(lstr);
+        if((hexdata == 16) || (lowhexdata == 16))
+            break;
+        else
+            hexdata = hexdata*16+lowhexdata;   //两个字符转成一个字节的16进制数
+        i++;
+        senddata[hexdatalen] = (char)hexdata;  //保存到字节数组中
+        hexdatalen++;
+    }
+    senddata.resize(hexdatalen);                //设置实际的字节数组大小
+}
+
+//将一个字符转换成16进制数
+char WidgetSendCommon::ConvertHexChar(char ch)
+{
+    if((ch >= '0') && (ch <= '9'))
+        return ch-0x30;
+    else if((ch >= 'A') && (ch <= 'F'))
+        return ch-'A'+10;
+    else if((ch >= 'a') && (ch <= 'f'))
+        return ch-'a'+10;
+    else return (-1);
+}
+
+
+void WidgetSendCommon::slotmaintosend(QString mainsendtext)
+{
+    strbuf = mainsendtext;
+    qDebug()<<strbuf;
+    qDebug("OOOOK");
+    on_btnSend_clicked();
+}

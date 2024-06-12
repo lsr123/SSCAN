@@ -9,12 +9,26 @@ MainWindow::MainWindow(QWidget *parent)
     this->page2=new main1;
     this->page3=new SerialUnion;
     my_buffer1 = new WidgetSettings;
+    //widgetsetting向main发
     connect(WidgetSettings::GetSettingIns(),SIGNAL(toMain(QByteArray)),this,SLOT(fromSettingHex(QByteArray)));
+
+    //main向sendcommon发
+    connect(this,SIGNAL(signalmaintosend(QString)),WidgetSendCommon::GetSendCommonIns(),SLOT(slotmaintosend(QString)));
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+MainWindow *MainWindow::GetMainIns()
+{
+    static MainWindow *mainins;
+    if(mainins == nullptr)
+    {
+        mainins = new MainWindow();
+    }
+    return mainins;
 }
 
 void MainWindow::fromSettingHex(QByteArray Hexdata)
@@ -48,7 +62,7 @@ void MainWindow::fromSettingHex(QByteArray Hexdata)
     ui->line4->setText(line_str4);
 
 }
-
+/*
 void MainWindow::on_pushButton_clicked()
 {
     //this->close();
@@ -59,8 +73,9 @@ void MainWindow::on_pushButton_clicked()
     //b = QString::fromLocal8Bit(a);
     //ui->my_lineEdit->setText(b);
 }
+*/
 
-
+/*
 void MainWindow::on_pushButton_2_clicked()
 {
     this->page3->show();
@@ -77,5 +92,28 @@ void MainWindow::on_pushb_clicked()
 {
     this->page3->show();
 
+}
+*/
+
+
+void MainWindow::on_action_triggered()
+{
+    this->page3->show();
+}
+
+/*
+void MainWindow::on_mainsend_clicked()
+{
+    QString MainSend =ui->m
+        ui->textEdit->toPlainText();
+
+}
+*/
+
+void MainWindow::on_mainsendbutton_clicked()
+{
+    QString MainSend =ui->maintextSend->toPlainText();
+    //向widgetsendcommon.cpp发送信号
+    emit signalmaintosend(MainSend);
 }
 

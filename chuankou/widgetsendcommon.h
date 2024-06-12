@@ -28,13 +28,15 @@ public:
     static WidgetSendCommon *GetSendCommonIns();
     void getSerialParam(QSerialPort *serial);
     void configData();
-
+    void String2Hex(QString str, QByteArray &senddata);
+    char ConvertHexChar(char ch);
 public:
     bool m_isHexSend;
     bool m_isEnterSend;
     bool m_isTimingSend;
     int m_letCycleTime;
     QString m_sTextEdit;
+    QString strbuf;
 
 private slots:
     void on_btnSend_clicked();
@@ -49,12 +51,15 @@ private slots:
 
     void on_isHexSend_stateChanged(int arg1);
 
+    void slotmaintosend(QString mainsendtext);
+
 private:
     Ui::WidgetSendCommon *ui;
     QSerialPort *serialSend;
     QTimer *timer;
     QString fronHexToDec(QString sData);
     int nSendLength;
+
 
 private:
     bool readFile(QString sFileName, QString *sDataBuffer);

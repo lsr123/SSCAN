@@ -29,21 +29,33 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    static MainWindow *GetMainIns();
     main1 *page2=NULL;
     SerialUnion *page3=NULL;
     WidgetSettings *my_buffer1;
 
 private slots:
-    void on_pushButton_clicked();
+    //void on_pushButton_clicked();
 
-    void on_pushButton_2_clicked();
+    //void on_pushButton_2_clicked();
 
-    void on_puss_clicked();
+    //void on_puss_clicked();
 
-    void on_pushb_clicked();
+    //void on_pushb_clicked();
 
     void fromSettingHex(QByteArray toMainHex);
+
+
+    void on_action_triggered();   //主窗口调用串口设置窗口
+
+    //void on_mainsend_clicked();
+
+    void on_mainsendbutton_clicked();
+
 private:
     Ui::MainWindow *ui;
+
+signals:
+    void signalmaintosend(QString sMainData);
 };
 #endif // MAINWINDOW_H
